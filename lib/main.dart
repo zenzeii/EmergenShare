@@ -64,24 +64,26 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.explore_outlined),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add_circle_rounded),
             label: 'New Request',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.inventory),
+            icon: Icon(Icons.inventory_2_rounded),
             label: 'My Inventory',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(Icons.chat_rounded),
             label: 'Chats',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedFontSize: 12,
+        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.black54,
         onTap: _onItemTapped,
       ),
     );
