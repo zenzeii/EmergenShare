@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "673378477012",
+    "project_id": "emergenshare",
+    "storage_bucket": "emergenshare.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673378477012:android:263072a8e98dd4ae4a6c41",
+        "android_client_info": {
+          "package_name": "com.emergenshare.emergenshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673378477012-rtb97ril4aa8lo46g87ebekfvecsoeoo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1AfYuX65ZoyCJAaTezEhpzhcBmPXys6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673378477012-rtb97ril4aa8lo46g87ebekfvecsoeoo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
