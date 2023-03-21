@@ -41,6 +41,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     ExploreScreen(),
     ExploreScreen(),
     ExploreScreen(),
+    ExploreScreen(),
     /*
     NewRequestScreen(),
     ProfileScree(),
@@ -72,11 +73,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),
-            label: 'Profile',
+            label: 'My Inventory',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chats',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.blue,
         onTap: _onItemTapped,
       ),
     );
