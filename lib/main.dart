@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+import 'screens/news_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,9 +39,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
   List screen = [
+    NewsListScreen(),
     ExploreScreen(),
-    ExploreScreen(),
-    ExploreScreen(),
+    NewsListScreen(),
     ExploreScreen(),
     /*
     NewRequestScreen(),
@@ -64,19 +65,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
+            icon: Icon(Icons.home),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_rounded),
+            icon: Icon(Icons.add),
             label: 'New Request',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.inventory_2_rounded),
+            icon: Icon(Icons.inventory),
             label: 'My Inventory',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_rounded),
+            icon: Icon(Icons.chat),
             label: 'Chats',
           ),
         ],
