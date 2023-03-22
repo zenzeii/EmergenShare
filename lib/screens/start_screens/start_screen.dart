@@ -1,7 +1,6 @@
 import 'package:emergenshare/screens/start_screens/custom_sign_in_screen.dart';
 import 'package:emergenshare/screens/start_screens/custom_sign_up_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});

@@ -1,6 +1,5 @@
+import 'package:emergenshare/components/my_card_list_widget.dart';
 import 'package:flutter/material.dart';
-
-import 'my_card_list_widget.dart';
 
 /*class MyCard extends StatefulWidget {
   final MyCardData data;
@@ -348,6 +347,7 @@ class _MyCardState extends State<MyCard> {
     );
   }
 }
+
 class MyCardDetailsScreen extends StatefulWidget {
   final MyCardData data;
   final Animation<double> animation;

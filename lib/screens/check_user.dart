@@ -1,6 +1,5 @@
 import 'dart:math';
-import 'package:emergenshare/screens/Messages/chat_list_screen.dart';
-import 'package:emergenshare/screens/start_screens/custom_sign_up_screen.dart';
+import 'package:emergenshare/screens/main_screens/messages/chat_list_screen.dart';
 import 'package:emergenshare/screens/start_screens/start_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

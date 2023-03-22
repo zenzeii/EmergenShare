@@ -1,6 +1,5 @@
+import 'package:emergenshare/components/my_card.dart';
 import 'package:flutter/material.dart';
-
-import 'my_card.dart';
 
 class MyCardListWidget extends StatelessWidget {
   final List<MyCardData> cardDataList;
@@ -13,7 +12,9 @@ class MyCardListWidget extends StatelessWidget {
     return ListView.builder(
       itemCount: cardDataList.length,
       itemBuilder: (BuildContext context, int index) {
-        return MyCard(data: cardDataList[index]);/*Card(
+        return MyCard(
+            data: cardDataList[
+                index]); /*Card(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

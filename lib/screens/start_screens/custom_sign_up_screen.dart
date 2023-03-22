@@ -125,7 +125,6 @@ class CustomEmailSignUpForm extends StatelessWidget {
                               )
                             : const Text(
                                 'Register',
-                                style: TextStyle(color: Colors.white),
                               ),
                       ),
                       SizedBox(height: 20),

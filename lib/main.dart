@@ -1,10 +1,11 @@
-import 'package:emergenshare/screens/Messages/chat_list_screen.dart';
+import 'package:emergenshare/screens/main_screens/messages/chat_list_screen.dart';
 import 'package:emergenshare/screens/check_user.dart';
 import 'package:emergenshare/screens/explore_screen.dart';
+import 'package:emergenshare/screens/start_screens/custom_sign_up_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'services/firebase_options.dart';
 import 'screens/news_list_screen.dart';
 
 Future<void> main() async {
@@ -26,19 +27,36 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyStatefulWidget(),
+      home: checkUser(),
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({super.key});
-
+class checkUser extends StatelessWidget {
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  Widget build(BuildContext context) => StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (FirebaseAuth.instance.currentUser == null) {
+              return CustomSignUpWidget();
+            }
+            return Tabs();
+          } else {
+            return CustomSignUpWidget();
+          }
+        },
+      );
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class Tabs extends StatefulWidget {
+  const Tabs({super.key});
+
+  @override
+  State<Tabs> createState() => _TabsState();
+}
+
+class _TabsState extends State<Tabs> {
   int _selectedIndex = 0;
   List screen = [
     NewsListScreen(),
