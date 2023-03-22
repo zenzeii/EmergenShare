@@ -1,3 +1,5 @@
+import 'package:emergenshare/screens/Messages/chat_list_screen.dart';
+import 'package:emergenshare/screens/check_user.dart';
 import 'package:emergenshare/screens/explore_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'screens/news_list_screen.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'EmergenShare',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -42,7 +44,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     NewsListScreen(),
     ExploreScreen(),
     NewsListScreen(),
-    ExploreScreen(),
+    CheckUser(screenNumber: 2),
     /*
     NewRequestScreen(),
     ProfileScree(),
@@ -58,9 +60,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('EmergenShare'),
-      ),
       body: screen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
