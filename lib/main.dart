@@ -1,7 +1,7 @@
+import 'package:emergenshare/screens/main_screens/inventory/inventory_list_screen.dart';
 import 'package:emergenshare/screens/main_screens/messages/chat_list_screen.dart';
-import 'package:emergenshare/screens/check_user.dart';
 import 'package:emergenshare/screens/explore_screen.dart';
-import 'package:emergenshare/screens/start_screens/custom_sign_up_screen.dart';
+import 'package:emergenshare/screens/start_screens/custom_start_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,11 +39,11 @@ class checkUser extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (FirebaseAuth.instance.currentUser == null) {
-              return CustomSignUpWidget();
+              return StartScreen();
             }
             return Tabs();
           } else {
-            return CustomSignUpWidget();
+            return StartScreen();
           }
         },
       );
@@ -61,12 +61,8 @@ class _TabsState extends State<Tabs> {
   List screen = [
     NewsListScreen(),
     ExploreScreen(),
-    NewsListScreen(),
-    CheckUser(screenNumber: 2),
-    /*
-    NewRequestScreen(),
-    ProfileScree(),
-    */
+    InventoryListScreen(),
+    ChatListScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -86,22 +82,24 @@ class _TabsState extends State<Tabs> {
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'New Request',
+            icon: Icon(Icons.live_help_rounded),
+            label: 'Request',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),
-            label: 'My Inventory',
+            label: 'Give',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Chats',
+            label: 'Chat',
           ),
         ],
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         selectedFontSize: 12,
-        selectedItemColor: Colors.amber[800],
-        unselectedItemColor: Colors.black54,
+        showUnselectedLabels: true,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black26,
         onTap: _onItemTapped,
       ),
     );

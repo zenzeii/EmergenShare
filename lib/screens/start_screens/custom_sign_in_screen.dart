@@ -31,7 +31,11 @@ class CustomEmailSignInForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthFlowBuilder<EmailFlowController>(
-      listener: (oldState, state, controller) {},
+      listener: (oldState, state, controller) {
+        if (state is SignedIn) {
+          Navigator.pop(context);
+        }
+      },
       builder: (context, state, controller, _) {
         if (state is AwaitingEmailAndPassword || state is AuthFailed) {
           return Scaffold(
@@ -116,7 +120,7 @@ class CustomEmailSignInForm extends StatelessWidget {
                                       child: Text(
                                         "Please check if your email and password is correct and make sure you have internet connection.",
                                         style: TextStyle(
-                                          color: Colors.blue,
+                                          color: Colors.red,
                                           fontSize: 11,
                                         ),
                                         textAlign: TextAlign.start,

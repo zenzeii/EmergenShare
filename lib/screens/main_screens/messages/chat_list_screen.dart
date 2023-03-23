@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emergenshare/screens/main_screens/messages/conversation_screen.dart';
+import 'package:emergenshare/screens/main_screens/messages/search_users_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -46,19 +47,17 @@ class _ChatListScreenState extends State<ChatListScreen> {
           ],
         ),
         actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchUsersScreen()),
+                );
+              },
+              icon: Icon(Icons.search_rounded)),
           PopupMenuButton(
             onSelected: (choice) async {
               switch (choice) {
-                case 'settings':
-                /*
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingsScreen()));
-                  break;
-
-                   */
-
                 case 'signout':
                   await FirebaseAuth.instance.signOut();
               }
@@ -66,10 +65,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
             icon: const Icon(Icons.more_vert_rounded),
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem(
-                  child: Text('Settings'),
-                  value: 'settings',
-                ),
                 PopupMenuItem(
                   child: Text('Sign out'),
                   value: 'signout',
@@ -114,7 +109,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     CircularProgressIndicator(),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text("Chats werden geladen ;)"),
+                      child: Text("Loading messages.."),
                     ),
                   ],
                 ),
@@ -134,8 +129,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         width: MediaQuery.of(context).size.width / 3,
                         height: MediaQuery.of(context).size.height / 3,
                       ),
-                      SizedBox(height: 20),
-                      Text("Noch keine Chats"),
+                      Text("No messages"),
                     ],
                   ),
                 ),

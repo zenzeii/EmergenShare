@@ -125,6 +125,7 @@ class CustomEmailSignUpForm extends StatelessWidget {
                               )
                             : const Text(
                                 'Register',
+                                style: TextStyle(color: Colors.white),
                               ),
                       ),
                       SizedBox(height: 20),
@@ -220,6 +221,11 @@ class CustomEmailSignUpForm extends StatelessWidget {
             .uploadUserInfo(result.user!.uid.toString(), userInfoMap);
         controller.setEmailAndPassword(emailCtrl.text, passwordCtrl.text);
         HelperFunctions.updateUserNameSharedPreference(usernameCtrl.text);
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const PutUserInfoWidget()),
+        );
       } on FirebaseAuthException catch (e) {
         if (e.code == "FirebaseAuthException" ||
             e.code == "email-already-in-use") {
