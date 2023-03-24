@@ -1,6 +1,7 @@
 import 'package:emergenshare/screens/main_screens/inventory/inventory_list_screen.dart';
 import 'package:emergenshare/screens/main_screens/messages/chat_list_screen.dart';
 import 'package:emergenshare/screens/explore_screen.dart';
+import 'package:emergenshare/screens/main_screens/requests/request_list_screen.dart';
 import 'package:emergenshare/screens/start_screens/custom_start_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'EmergenShare',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: checkUser(),
     );
@@ -60,7 +61,7 @@ class _TabsState extends State<Tabs> {
   int _selectedIndex = 0;
   List screen = [
     NewsListScreen(),
-    ExploreScreen(),
+    RequestListScreen(),
     InventoryListScreen(),
     ChatListScreen(),
   ];

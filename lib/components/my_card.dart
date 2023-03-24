@@ -255,8 +255,6 @@ class MyCard extends StatefulWidget {
 }
 
 class _MyCardState extends State<MyCard> {
-  bool _expanded = false;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -278,7 +276,7 @@ class _MyCardState extends State<MyCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               offset: Offset(0.0, 1.0),
@@ -286,35 +284,41 @@ class _MyCardState extends State<MyCard> {
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image.network(
-                  widget.data.imageUrl,
-                  width: 80.0,
-                  height: 80.0,
-                  fit: BoxFit.cover,
-                ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                bottomLeft: Radius.circular(10.0),
+                topRight: Radius.circular(0),
+                bottomRight: Radius.circular(0),
               ),
-              SizedBox(width: 16.0),
-              Expanded(
+              child: Image.network(
+                widget.data.imageUrl,
+                width: 120.0,
+                height: 120.0,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.data.title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16.0,
                       ),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     Text(
                       widget.data.subtitle,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
@@ -322,19 +326,8 @@ class _MyCardState extends State<MyCard> {
                   ],
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  _expanded ? Icons.expand_less : Icons.expand_more,
-                  size: 30.0,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                },
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -362,80 +355,75 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.white54,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image at the top with expand animation
-            Expanded(
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Hero(
-                  tag: widget.data.title,
-                  child: Image.asset(
-                    widget.data.imageUrl,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Image at the top with expand animation
+              Container(
+                child: Image.network(
+                  widget.data.imageUrl,
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.width,
+                ),
+              ),
+              // Padding for text content
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: AnimatedBuilder(
+                  animation: widget.animation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: widget.animation.value,
+                      child: Transform.translate(
+                        offset: Offset(0.0, 100 * (1 - widget.animation.value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16.0),
+                      Text(
+                        widget.data.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      Text(
+                        widget.data.subtitle,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        widget.data.subtitle,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 16.0,
+                          height: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      MaterialButton(
+                        onPressed: () {},
+                        color: Colors.white,
+                        textColor: Colors.black,
+                        child: Text('Donate'),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            // Padding for text content
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: AnimatedBuilder(
-                animation: widget.animation,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: widget.animation.value,
-                    child: Transform.translate(
-                      offset: Offset(0.0, 100 * (1 - widget.animation.value)),
-                      child: child,
-                    ),
-                  );
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16.0),
-                    Text(
-                      widget.data.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      widget.data.subtitle,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      widget.data.subtitle,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: 16.0,
-                        height: 1.5,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    MaterialButton(
-                      onPressed: () {},
-                      color: Colors.white,
-                      textColor: Colors.black,
-                      child: Text('Donate'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

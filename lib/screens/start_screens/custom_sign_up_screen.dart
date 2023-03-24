@@ -197,10 +197,6 @@ class CustomEmailSignUpForm extends StatelessWidget {
       "email": emailCtrl.text,
       "bio": "",
       "pic": "",
-      "degree": "",
-      "major": "",
-      "studySince": "",
-      "courseReviewed": [],
     };
     final valid = await DatabaseMethods()
         .isUsernameValid(usernameCtrl.text.toLowerCase());

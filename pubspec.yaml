@@ -39,6 +39,7 @@ dev_dependencies:
   url_launcher: ^6.0.20
   flutter_email_sender: ^5.1.0
   image_picker: ^0.8.4+10
+  flutter_chips_input: ^2.0.0
 
 flutter:
   uses-material-design: true

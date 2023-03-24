@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emergenshare/services/helperfunctions.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseMethods {
   //Users----------------------------------------------------------------------
@@ -104,53 +105,15 @@ class DatabaseMethods {
 
   //Reviews---------------------------------------------------------------------
 
-  Future<void> postCourseReview(
-    String courseID,
+  Future<void> addInventoryItem(
     Map<String, dynamic> reviewMap,
-    double userRating,
-    double userDifficulty,
-    double courseRating,
-    double courseDifficulty,
-    int numberOfReviewers,
   ) async {
     FirebaseFirestore.instance
-        .collection("courses")
-        .doc(courseID)
-        .collection('reviews')
-        .doc('reviewFrom' + HelperFunctions.getUserIdSharedPreference())
-        .set(reviewMap);
-
-    FirebaseFirestore.instance
         .collection("users")
-        .doc(HelperFunctions.getUserIdSharedPreference())
-        .set({
-      'courseReviewed': FieldValue.arrayUnion([courseID])
-    }, SetOptions(merge: true));
-
-    // get fresh data
-    FirebaseFirestore.instance
-        .collection("courses")
-        .doc(courseID)
-        .collection('reviews')
-        .get()
-        .then((value) => {numberOfReviewers = value.size});
-
-    if (numberOfReviewers == 0) {
-      courseRating = userRating;
-      courseDifficulty = userDifficulty;
-    } else {
-      courseRating = (userRating + courseRating * numberOfReviewers) /
-          (numberOfReviewers + 1);
-      courseDifficulty =
-          (userDifficulty + courseDifficulty * numberOfReviewers) /
-              (numberOfReviewers + 1);
-    }
-
-    FirebaseFirestore.instance.collection("courses").doc(courseID).update({
-      'numberOfReviewers': numberOfReviewers + 1,
-      'rating': courseRating,
-      'difficulty': courseDifficulty,
-    });
+        .doc(FirebaseAuth.instance.currentUser!.uid.toString())
+        .collection('inventory')
+        .doc()
+        .set(reviewMap);
   }
 
   Future<void> editOwnCourseReview(String courseID, String newComment) async {

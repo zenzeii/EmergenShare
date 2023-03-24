@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:emergenshare/screens/main_screens/inventory/add_inventory_item_screen.dart';
+import 'package:emergenshare/screens/main_screens/requests/add_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-final inventoryRef = FirebaseFirestore.instance
+final requestsRef = FirebaseFirestore.instance
     .collection('users')
     .doc(FirebaseAuth.instance.currentUser!.uid.toString())
-    .collection('inventory');
+    .collection('requests');
 
-class InventoryListScreen extends StatefulWidget {
-  InventoryListScreen({Key? key}) : super(key: key);
+class RequestListScreen extends StatefulWidget {
+  RequestListScreen({Key? key}) : super(key: key);
   List<String> courseNames = [];
 
   @override
-  _InventoryListScreenState createState() => _InventoryListScreenState();
+  _RequestListScreenState createState() => _RequestListScreenState();
 }
 
-class _InventoryListScreenState extends State<InventoryListScreen> {
+class _RequestListScreenState extends State<RequestListScreen> {
   late int captureNumberOfCourses;
 
   @override
@@ -32,7 +32,7 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'MY INVENTORY',
+              'MY REQUESTS',
               style: TextStyle(
                   color: Theme.of(context).textTheme.bodyText1?.color),
             ),
@@ -59,12 +59,12 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddInventoryItemScreen()),
+            MaterialPageRoute(builder: (context) => AddRequestScreen()),
           );
         },
-        tooltip: 'Add Item to inventory',
-        icon: const Icon(Icons.add),
-        label: const Text('Add item'),
+        tooltip: 'Request help',
+        icon: const Icon(Icons.handshake_rounded),
+        label: Text('Request help'),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -77,7 +77,7 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
           ],
         )),
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: inventoryRef.snapshots(),
+          stream: requestsRef.snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return const Center(
@@ -91,7 +91,7 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
               return const Center(
                 child: Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: Text("What do want to donate?"),
+                  child: Text("What help do you need?"),
                 ),
               );
             }
@@ -99,7 +99,7 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
             final data = snapshot.requireData;
             captureNumberOfCourses = data.size;
             for (var i = 0; i < captureNumberOfCourses; i++) {
-              InventoryListScreen()
+              RequestListScreen()
                   .courseNames
                   .add((data.docs[i].data())["itemName"]);
             }

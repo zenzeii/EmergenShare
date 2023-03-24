@@ -3,14 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AddInventoryItemScreen extends StatefulWidget {
+class AddRequestScreen extends StatefulWidget {
   @override
   _Submissionstate createState() => _Submissionstate();
 }
 
-String dropdownValue = 'Select category';
-
-class _Submissionstate extends State<AddInventoryItemScreen> {
+class _Submissionstate extends State<AddRequestScreen> {
   final formKeyTitle = GlobalKey<FormState>();
   final formKeyAmount = GlobalKey<FormState>();
   final TextEditingController _itemName = new TextEditingController();
@@ -37,7 +35,7 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'ADD ITEM',
+              'REQUEST HELP',
               style: TextStyle(
                   color: Theme.of(context).textTheme.bodyText1?.color),
             ),
@@ -55,7 +53,7 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
                 controller: _itemName,
                 textCapitalization: TextCapitalization.sentences,
                 maxLines: 1,
-                decoration: const InputDecoration(hintText: "Item name"),
+                decoration: const InputDecoration(hintText: "Title"),
                 validator: (val) {
                   return val!.isEmpty ? 'Item cannot be empty' : null;
                 },
@@ -67,8 +65,8 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
               child: TextFormField(
                 controller: _itemAmount,
                 keyboardType: TextInputType.number,
-                maxLines: 1,
-                decoration: const InputDecoration(hintText: "Item amount"),
+                maxLines: 8,
+                decoration: const InputDecoration(hintText: "Description"),
               ),
             ),
             SizedBox(height: 10),
@@ -81,7 +79,7 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
                   submitFunction();
                 });
               },
-              child: Text('Add item to my inventory'),
+              child: Text('Request help'),
             )
           ],
         ),
@@ -90,26 +88,19 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
   }
 
   void submitFunction() {
-    if (formKeyTitle.currentState!.validate() &&
-        dropdownValue != 'Select category') {
+    if (formKeyTitle.currentState!.validate()) {
       final Map<String, dynamic> userSubmissionMap = {
         "authorId": FirebaseAuth.instance.currentUser!.uid.toString(),
         "authorName": FirebaseAuth.instance.currentUser!.displayName.toString(),
         "timeStamp": DateTime.now(),
         "itemName": _itemName.text.trim(),
-        "itemAmount": _itemAmount.text.trim(),
-        "category": dropdownValue,
+        "itemAmount": difficultyLevel,
+        "category": ratingLevel,
       };
       DatabaseMethods().addInventoryItem(
         userSubmissionMap,
       );
       Navigator.pop(context);
-    } else if (dropdownValue == 'Select category') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Select category!'),
-        ),
-      );
     }
   }
 }
@@ -122,11 +113,13 @@ class DropdownButtonCategory extends StatefulWidget {
 }
 
 class _DropdownButtonCategoryState extends State<DropdownButtonCategory> {
+  String dropdownValue = list.first;
+
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       isExpanded: true,
-      value: dropdownValue,
+      hint: Text('Select Category'),
       onChanged: (String? value) {
         setState(() {
           dropdownValue = value!;
@@ -142,10 +135,4 @@ class _DropdownButtonCategoryState extends State<DropdownButtonCategory> {
   }
 }
 
-const List<String> list = <String>[
-  'Select category',
-  'Food',
-  'Time',
-  'Material',
-  'Money',
-];
+const List<String> list = <String>['Food', 'Time', 'Material', 'Money'];
