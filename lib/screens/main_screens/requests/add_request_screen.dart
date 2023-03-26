@@ -10,7 +10,8 @@ class AddRequestScreen extends StatefulWidget {
 
 class _Submissionstate extends State<AddRequestScreen> {
   final formKeyTitle = GlobalKey<FormState>();
-  final formKeyAmount = GlobalKey<FormState>();
+  final formKeyLocation = GlobalKey<FormState>();
+  final formKeyDesc = GlobalKey<FormState>();
   final TextEditingController _itemName = new TextEditingController();
   final TextEditingController _itemAmount = new TextEditingController();
 
@@ -61,7 +62,17 @@ class _Submissionstate extends State<AddRequestScreen> {
             ),
             SizedBox(height: 10),
             Form(
-              key: formKeyAmount,
+              key: formKeyLocation,
+              child: TextFormField(
+                controller: _itemName,
+                textCapitalization: TextCapitalization.sentences,
+                maxLines: 1,
+                decoration: const InputDecoration(hintText: "Location"),
+              ),
+            ),
+            SizedBox(height: 10),
+            Form(
+              key: formKeyDesc,
               child: TextFormField(
                 controller: _itemAmount,
                 keyboardType: TextInputType.number,

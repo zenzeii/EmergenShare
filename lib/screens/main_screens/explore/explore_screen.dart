@@ -1,14 +1,14 @@
 import 'package:emergenshare/components/my_card_list_widget.dart';
 import 'package:flutter/material.dart';
 
-class NewsListScreen extends StatefulWidget {
-  const NewsListScreen({Key? key}) : super(key: key);
+class ExploreScreen extends StatefulWidget {
+  const ExploreScreen({Key? key}) : super(key: key);
 
   @override
-  _NewsListScreenState createState() => _NewsListScreenState();
+  _ExploreScreenState createState() => _ExploreScreenState();
 }
 
-class _NewsListScreenState extends State<NewsListScreen> {
+class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
