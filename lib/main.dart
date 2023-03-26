@@ -1,3 +1,4 @@
+import 'package:emergenshare/screens/main_screens/filter/selection_screen.dart';
 import 'package:emergenshare/screens/main_screens/inventory/inventory_list_screen.dart';
 import 'package:emergenshare/screens/main_screens/messages/chat_list_screen.dart';
 import 'package:emergenshare/screens/explore_screen.dart';
@@ -61,6 +62,7 @@ class _TabsState extends State<Tabs> {
   int _selectedIndex = 0;
   List screen = [
     NewsListScreen(),
+    SelectionScreen(),
     RequestListScreen(),
     InventoryListScreen(),
     ChatListScreen(),
@@ -81,6 +83,10 @@ class _TabsState extends State<Tabs> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_outlined),
+            label: 'Organisations',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.live_help_rounded),

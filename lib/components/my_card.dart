@@ -264,7 +264,7 @@ class _MyCardState extends State<MyCard> {
             builder: (BuildContext context) {
               return MyCardDetailsScreen(
                 data: widget.data,
-                animation: _createAnimation(),
+                animation: _createAnimation()
               );
             },
           ),
@@ -362,10 +362,13 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
             children: [
               // Image at the top with expand animation
               Container(
-                child: Image.network(
-                  widget.data.imageUrl,
-                  fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width,
+                child: Hero(
+                  tag: widget.data.imageUrl,
+                  child: Image.network(
+                    widget.data.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               // Padding for text content
@@ -404,7 +407,7 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
                       ),
                       SizedBox(height: 16.0),
                       Text(
-                        widget.data.subtitle,
+                        widget.data.longText,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
                           fontSize: 16.0,
@@ -418,6 +421,25 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
                         textColor: Colors.black,
                         child: Text('Donate'),
                       ),
+                      // Disclaimer at the bottom right
+                      SizedBox(height: 16.0),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            //TODO
+                          },
+                          child: Text(
+                            'Posted by: ${widget.data.postingEntity.title}',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 12.0,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
                     ],
                   ),
                 ),

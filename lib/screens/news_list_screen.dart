@@ -18,7 +18,10 @@ class _NewsListScreenState extends State<NewsListScreen> {
     );
   }
 }
+const Organisation or1 = Organisation(id: "redCross", title: "Red Cross", imageUrl: "Empty");
+const Organisation or2 = Organisation(id: "aktionDeutschlandHilft", title: "Aktion Deutschland Hilft", imageUrl: "Empty");
 
+const String longTextSample = """As you know, the world is facing many challenges today, and many people are struggling to make ends meet. It's easy to feel powerless in the face of so much need, but we believe that together, we can make a difference. That's why we're reaching out to you today to ask for your support. Our organization is dedicated to making a positive impact in the lives of those who need it most. We work tirelessly to provide food, shelter, and other essential resources to those who are struggling, and we do so with the help of generous donors like you.""";
 const List<MyCardData> cardDataList = [
   MyCardData(
     imageUrl:
@@ -26,6 +29,8 @@ const List<MyCardData> cardDataList = [
     title: 'Combat Hunger',
     subtitle:
         'Help provide food and support for those who suffer from malnutrition and hunger.',
+    postingEntity: or1,
+    longText: longTextSample,
   ),
   MyCardData(
     imageUrl:
@@ -33,6 +38,8 @@ const List<MyCardData> cardDataList = [
     title: 'Support Victims of War',
     subtitle:
         'Help provide aid and assistance to those affected by war and conflict.',
+      postingEntity: or1,
+    longText: longTextSample,
   ),
   MyCardData(
     imageUrl:
@@ -40,6 +47,8 @@ const List<MyCardData> cardDataList = [
     title: 'Relief for Natural Disasters',
     subtitle:
         'Help provide relief and support for those affected by natural disasters like earthquakes, hurricanes, and floods.',
+      postingEntity: or1,
+    longText: longTextSample,
   ),
   MyCardData(
     imageUrl:
@@ -47,6 +56,8 @@ const List<MyCardData> cardDataList = [
     title: 'Emergency Response',
     subtitle:
         'Help provide immediate aid and support for those in crisis situations like fires, floods, or terrorist attacks.',
+      postingEntity: or1,
+    longText: longTextSample,
   ),
   MyCardData(
     imageUrl:
@@ -54,6 +65,8 @@ const List<MyCardData> cardDataList = [
     title: 'Provide Clean Water',
     subtitle:
         'Help provide clean and safe drinking water to those in need in developing countries.',
+      postingEntity: or1,
+    longText: longTextSample,
   ),
   MyCardData(
     imageUrl:
@@ -61,6 +74,8 @@ const List<MyCardData> cardDataList = [
     title: 'Fight Poverty',
     subtitle:
         'Help provide support and resources to lift people out of poverty and improve their quality of life.',
+      postingEntity: or2,
+    longText: longTextSample,
   ),
   MyCardData(
     imageUrl:
@@ -68,6 +83,8 @@ const List<MyCardData> cardDataList = [
     title: 'Promote Education',
     subtitle:
         'Help provide access to education and resources to support learning and development in underprivileged communities.',
+      postingEntity: or2,
+    longText: longTextSample,
   ),
   MyCardData(
     imageUrl:
@@ -75,5 +92,9 @@ const List<MyCardData> cardDataList = [
     title: 'Protect Children',
     subtitle:
         'Help provide support and protection for children who are victims of abuse, exploitation, or neglect.',
+      postingEntity: or2,
+    longText: longTextSample,
   ),
 ];
+
+

@@ -22,7 +22,7 @@ dependencies:
   chips_choice: ^2.0.1
   flutter_html: ^3.0.0-alpha.3
   shared_preferences: ^2.0.13
-
+  drag_select_grid_view: ^0.6.1
 
 
 dev_dependencies:
@@ -40,6 +40,7 @@ dev_dependencies:
   flutter_email_sender: ^5.1.0
   image_picker: ^0.8.4+10
   flutter_chips_input: ^2.0.0
+  firebase_core_platform_interface: 4.5.1
 
 flutter:
   uses-material-design: true

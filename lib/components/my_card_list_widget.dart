@@ -118,15 +118,32 @@ class MyCardListWidget extends StatelessWidget {
     );
   }
 }*/
+class Organisation{
+  final String id;
+  final String title;
+  final String imageUrl;
+  final String? subtitle;
+
+  const Organisation({
+    required this.id,
+    required this.title,
+    required this.imageUrl,
+    this.subtitle,
+});
+}
 
 class MyCardData {
   final String imageUrl;
   final String title;
   final String subtitle;
+  final String longText;
+  final Organisation postingEntity;
 
   const MyCardData({
     required this.imageUrl,
     required this.title,
     required this.subtitle,
+    required this.longText,
+    required this.postingEntity,
   });
 }
