@@ -91,23 +91,26 @@ class CustomEmailSignInForm extends StatelessWidget {
                         autocorrect: false,
                       ),
                       SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () async {
-                          bool validEmail = await DatabaseMethods()
-                              .isEmailValid(emailCtrl.text.trim());
-                          if (!validEmail) {
-                            isEmailInDB = false;
-                          } else {
-                            isEmailInDB = true;
-                          }
-                          if (formKey.currentState!.validate()) {
-                            controller.setEmailAndPassword(
-                                emailCtrl.text.trim(), passwordCtrl.text);
-                          }
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white),
+                      Container(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            bool validEmail = await DatabaseMethods()
+                                .isEmailValid(emailCtrl.text.trim());
+                            if (!validEmail) {
+                              isEmailInDB = false;
+                            } else {
+                              isEmailInDB = true;
+                            }
+                            if (formKey.currentState!.validate()) {
+                              controller.setEmailAndPassword(
+                                  emailCtrl.text.trim(), passwordCtrl.text);
+                            }
+                          },
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),

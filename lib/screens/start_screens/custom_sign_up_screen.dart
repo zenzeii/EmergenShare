@@ -112,21 +112,24 @@ class CustomEmailSignUpForm extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () async {
-                          SignUpFunction(controller, context);
-                        },
-                        child: isLoading
-                            ? Transform.scale(
-                                child: const CircularProgressIndicator(
-                                  color: Colors.white,
+                      Container(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            SignUpFunction(controller, context);
+                          },
+                          child: isLoading
+                              ? Transform.scale(
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                  scale: 0.5,
+                                )
+                              : const Text(
+                                  'Register',
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                                scale: 0.5,
-                              )
-                            : const Text(
-                                'Register',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                        ),
                       ),
                       SizedBox(height: 20),
                       Container(

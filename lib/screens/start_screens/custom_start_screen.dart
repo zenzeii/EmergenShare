@@ -12,10 +12,15 @@ class StartScreen extends StatelessWidget {
           children: [
             SizedBox(height: 50),
             Spacer(),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
+                  Icon(
+                    Icons.support,
+                    size: 120,
+                  ),
                   Text(
                     "EMERGENSHARE",
                     textAlign: TextAlign.center,
@@ -37,29 +42,37 @@ class StartScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CustomSignInWidget()),
-                    );
-                  },
-                  child: const Text(
-                    'Login',
+                Container(
+                  width: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 8,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CustomSignInWidget()),
+                      );
+                    },
+                    child: const Text(
+                      'Login',
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CustomSignUpWidget()),
-                    );
-                  },
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(color: Colors.white),
+                Container(
+                  width: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 8,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CustomSignUpWidget()),
+                      );
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
