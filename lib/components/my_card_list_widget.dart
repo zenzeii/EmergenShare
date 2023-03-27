@@ -12,138 +12,28 @@ class MyCardListWidget extends StatelessWidget {
     return ListView.builder(
       itemCount: cardDataList.length,
       itemBuilder: (BuildContext context, int index) {
-        return MyCard(
-            data: cardDataList[
-                index]); /*Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Image.network(
-                cardDataList[index].imageUrl,
-                fit: BoxFit.cover,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      cardDataList[index].title,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      cardDataList[index].subtitle,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );*/
+        return MyCard(data: cardDataList[index]);
       },
     );
   }
 }
 
-/*class MyCard extends StatelessWidget {
-  final MyCardData data;
-
-  MyCard({required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      height: 250.0,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1.0,
-            blurRadius: 5.0,
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.0),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(
-              data.imageUrl,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            ),
-            Container(
-              color: Colors.black.withOpacity(0.4),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    data.subtitle,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
-class Organisation{
-  final String id;
-  final String title;
-  final String imageUrl;
-  final String? subtitle;
-
-  const Organisation({
-    required this.id,
-    required this.title,
-    required this.imageUrl,
-    this.subtitle,
-});
-}
-
 class MyCardData {
   final String imageUrl;
   final String title;
-  final String subtitle;
-  final String longText;
-  final Organisation postingEntity;
+  final String location;
+  final String description;
+  final List items;
+  final String authorId;
+  final String authorName;
 
   const MyCardData({
     required this.imageUrl,
     required this.title,
-    required this.subtitle,
-    required this.longText,
-    required this.postingEntity,
+    required this.location,
+    required this.items,
+    required this.description,
+    required this.authorId,
+    required this.authorName,
   });
 }

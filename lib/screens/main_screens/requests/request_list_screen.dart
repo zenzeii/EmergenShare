@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emergenshare/components/my_card.dart';
+import 'package:emergenshare/components/my_card_list_widget.dart';
 import 'package:emergenshare/screens/main_screens/requests/add_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-final requestsRef = FirebaseFirestore.instance
-    .collection('users')
-    .doc(FirebaseAuth.instance.currentUser!.uid.toString())
-    .collection('requests');
+final requestsRef = FirebaseFirestore.instance.collection('requests');
 
 class RequestListScreen extends StatefulWidget {
   RequestListScreen({Key? key}) : super(key: key);
@@ -32,7 +31,7 @@ class _RequestListScreenState extends State<RequestListScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'MY REQUESTS',
+              'REQUESTS',
               style: TextStyle(
                   color: Theme.of(context).textTheme.bodyText1?.color),
             ),
@@ -101,16 +100,16 @@ class _RequestListScreenState extends State<RequestListScreen> {
             for (var i = 0; i < captureNumberOfCourses; i++) {
               RequestListScreen()
                   .courseNames
-                  .add((data.docs[i].data())["itemName"]);
+                  .add((data.docs[i].data())["requestTitle"]);
             }
 
             return ListView.builder(
               itemCount: data.size,
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () {
-                    ScaffoldMessenger.of(context).clearSnackBars();
-                    /*
+                    onTap: () {
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      /*
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -121,11 +120,20 @@ class _RequestListScreenState extends State<RequestListScreen> {
                     );
 
                      */
-                  },
-                  child: CourseBox().courseBox(
-                      MediaQuery.of(context).size.width,
-                      (data.docs[index].data())["itemName"]),
-                );
+                    },
+                    child: MyCard(
+                      data: MyCardData(
+                        imageUrl:
+                            'https://images.pexels.com/photos/5690826/pexels-photo-5690826.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
+                        title: (data.docs[index].data())["requestTitle"],
+                        location: (data.docs[index].data())["requestLocation"],
+                        description:
+                            (data.docs[index].data())["requestDescription"],
+                        items: (data.docs[index].data())["requestItems"],
+                        authorId: (data.docs[index].data())["authorId"],
+                        authorName: (data.docs[index].data())["authorName"],
+                      ),
+                    ));
               },
             );
           },

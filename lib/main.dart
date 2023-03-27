@@ -1,14 +1,11 @@
-import 'package:emergenshare/screens/main_screens/filter/selection_screen.dart';
 import 'package:emergenshare/screens/main_screens/inventory/inventory_list_screen.dart';
 import 'package:emergenshare/screens/main_screens/messages/chat_list_screen.dart';
-import 'package:emergenshare/screens/explore_screen.dart';
 import 'package:emergenshare/screens/main_screens/requests/request_list_screen.dart';
 import 'package:emergenshare/screens/start_screens/custom_start_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'services/firebase_options.dart';
-import 'screens/news_list_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'EmergenShare',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.blue,
       ),
       home: checkUser(),
     );
@@ -61,8 +58,7 @@ class Tabs extends StatefulWidget {
 class _TabsState extends State<Tabs> {
   int _selectedIndex = 0;
   List screen = [
-    NewsListScreen(),
-    SelectionScreen(),
+    //NewsListScreen(),
     RequestListScreen(),
     InventoryListScreen(),
     ChatListScreen(),
@@ -80,17 +76,18 @@ class _TabsState extends State<Tabs> {
       body: screen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          /*
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.explore),
             label: 'Explore',
           ),
+
+           */
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_outlined),
-            label: 'Organisations',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.live_help_rounded),
-            label: 'Request',
+            //icon: Icon(Icons.live_help_rounded),
+            //icon: Icon(Icons.language_outlined),
+            icon: Icon(Icons.support_rounded),
+            label: 'Requests',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),

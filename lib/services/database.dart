@@ -53,7 +53,7 @@ class DatabaseMethods {
     return result.docs.isEmpty;
   }
 
-  //Courses---------------------------------------------------------------------
+  //Requests---------------------------------------------------------------------
 
   Future<QuerySnapshot> getCoursesByCourseName(String username) {
     return FirebaseFirestore.instance
@@ -103,7 +103,13 @@ class DatabaseMethods {
     }
   }
 
-  //Reviews---------------------------------------------------------------------
+  Future<void> addRequest(
+    Map<String, dynamic> reviewMap,
+  ) async {
+    FirebaseFirestore.instance.collection("requests").doc().set(reviewMap);
+  }
+
+  //Items---------------------------------------------------------------------
 
   Future<void> addInventoryItem(
     Map<String, dynamic> reviewMap,

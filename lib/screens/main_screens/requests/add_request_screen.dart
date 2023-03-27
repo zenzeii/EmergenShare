@@ -10,16 +10,50 @@ class AddRequestScreen extends StatefulWidget {
 
 class _Submissionstate extends State<AddRequestScreen> {
   final formKeyTitle = GlobalKey<FormState>();
-  final formKeyAmount = GlobalKey<FormState>();
-  final TextEditingController _itemName = new TextEditingController();
-  final TextEditingController _itemAmount = new TextEditingController();
+  final formKeyLocation = GlobalKey<FormState>();
+  final TextEditingController _requestTitle = new TextEditingController();
+  final TextEditingController _requestLocation = new TextEditingController();
+  final TextEditingController _requestDesc = new TextEditingController();
+  final TextEditingController _requestItem = new TextEditingController();
+
+  late FocusNode myFocusNode;
 
   double ratingLevel = 0;
   double difficultyLevel = 0;
+  List<String> _neededItems = [];
+  List<bool> _selected = [];
 
   @override
   void initState() {
     super.initState();
+    myFocusNode = FocusNode();
+  }
+
+  Widget buildChips() {
+    final List<Widget> chips = [];
+    for (int i = 0; i < _neededItems.length; i++) {
+      final InputChip actionChip = InputChip(
+        label: Text(_neededItems[i]),
+        onDeleted: () {
+          _neededItems.removeAt(i);
+          _selected.removeAt(i);
+          setState(() {
+            _neededItems = _neededItems;
+            _selected = _selected;
+          });
+        },
+      );
+      chips.add(actionChip);
+    }
+
+    return ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: [
+          Wrap(
+            children: chips,
+          ),
+        ]);
   }
 
   @override
@@ -43,43 +77,123 @@ class _Submissionstate extends State<AddRequestScreen> {
         ),
       ),
       body: Scaffold(
-        body: ListView(
-          padding: const EdgeInsets.all(40),
+        body: Column(
           children: [
-            SizedBox(height: 20.0),
-            Form(
-              key: formKeyTitle,
-              child: TextFormField(
-                controller: _itemName,
-                textCapitalization: TextCapitalization.sentences,
-                maxLines: 1,
-                decoration: const InputDecoration(hintText: "Title"),
-                validator: (val) {
-                  return val!.isEmpty ? 'Item cannot be empty' : null;
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(40),
+                children: [
+                  Form(
+                    key: formKeyTitle,
+                    child: TextFormField(
+                      controller: _requestTitle,
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLines: 1,
+                      decoration: const InputDecoration(hintText: "Title"),
+                      validator: (val) {
+                        return val!.isEmpty ? 'Please enter a title' : null;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Form(
+                    key: formKeyLocation,
+                    child: TextFormField(
+                      controller: _requestLocation,
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLines: 1,
+                      decoration: const InputDecoration(hintText: "Location"),
+                      validator: (val) {
+                        return val!.isEmpty ? 'Please enter a location' : null;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _requestDesc,
+                    textCapitalization: TextCapitalization.sentences,
+                    maxLines: 3,
+                    decoration: const InputDecoration(hintText: "Description"),
+                  ),
+                  SizedBox(height: 8),
+                  //DropdownButtonCategory(),
+                  //SizedBox(height: 10),
+                  TextField(
+                    controller: _requestItem,
+                    textCapitalization: TextCapitalization.sentences,
+                    focusNode: myFocusNode,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      hintText: "Needed items",
+                      suffixIcon: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _requestItem.clear();
+                            },
+                            icon: _requestItem.text == ""
+                                ? Icon(
+                                    Icons.clear,
+                                    color: Colors.red,
+                                  )
+                                : Icon(
+                                    Icons.clear,
+                                    color: Colors.red,
+                                  ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              myFocusNode.requestFocus();
+                              addKeyword(_requestItem.text);
+                            },
+                            icon: _requestItem.text == ""
+                                ? Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                  )
+                                : Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onSubmitted: (value) {
+                      myFocusNode.requestFocus();
+                      addKeyword(value);
+                    },
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: buildChips(),
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(
+                  right: 40, left: 40, top: 10, bottom: 10),
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    submitFunction();
+                  });
                 },
+                child: Text('Request help'),
               ),
-            ),
-            SizedBox(height: 10),
-            Form(
-              key: formKeyAmount,
-              child: TextFormField(
-                controller: _itemAmount,
-                keyboardType: TextInputType.number,
-                maxLines: 8,
-                decoration: const InputDecoration(hintText: "Description"),
-              ),
-            ),
-            SizedBox(height: 10),
-            DropdownButtonCategory(),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                setState(() {
-                  submitFunction();
-                });
-              },
-              child: Text('Request help'),
             )
           ],
         ),
@@ -87,17 +201,31 @@ class _Submissionstate extends State<AddRequestScreen> {
     );
   }
 
+  void addKeyword(String value) {
+    if (_requestItem.text.isNotEmpty) {
+      _neededItems.add(_requestItem.text);
+      _selected.add(true);
+      _requestItem.clear();
+      setState(() {
+        _neededItems = _neededItems;
+        _selected = _selected;
+      });
+    }
+  }
+
   void submitFunction() {
-    if (formKeyTitle.currentState!.validate()) {
+    if (formKeyTitle.currentState!.validate() &&
+        formKeyLocation.currentState!.validate()) {
       final Map<String, dynamic> userSubmissionMap = {
         "authorId": FirebaseAuth.instance.currentUser!.uid.toString(),
         "authorName": FirebaseAuth.instance.currentUser!.displayName.toString(),
         "timeStamp": DateTime.now(),
-        "itemName": _itemName.text.trim(),
-        "itemAmount": difficultyLevel,
-        "category": ratingLevel,
+        "requestTitle": _requestTitle.text.trim(),
+        "requestLocation": _requestLocation.text.trim(),
+        "requestDescription": _requestDesc.text.trim(),
+        "requestItems": _neededItems,
       };
-      DatabaseMethods().addInventoryItem(
+      DatabaseMethods().addRequest(
         userSubmissionMap,
       );
       Navigator.pop(context);

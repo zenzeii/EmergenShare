@@ -64,7 +64,7 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
         },
         tooltip: 'Add Item to inventory',
         icon: const Icon(Icons.add),
-        label: const Text('Add item'),
+        label: const Text('Add item to donate'),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -147,7 +147,7 @@ class CourseBox {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.redAccent, Colors.redAccent],
+              colors: [Colors.blue, Colors.blue],
               tileMode: TileMode.mirror,
             ),
           ),
