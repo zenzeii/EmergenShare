@@ -109,6 +109,20 @@ class DatabaseMethods {
     FirebaseFirestore.instance.collection("requests").doc().set(reviewMap);
   }
 
+  Future<void> updateRequest(
+    String requestId,
+    Map<String, dynamic> reviewMap,
+  ) async {
+    FirebaseFirestore.instance
+        .collection("requests")
+        .doc(requestId)
+        .set(reviewMap);
+  }
+
+  Future<void> deleteRequest(String requestId) async {
+    FirebaseFirestore.instance.collection("requests").doc(requestId).delete();
+  }
+
   //Items---------------------------------------------------------------------
 
   Future<void> addInventoryItem(

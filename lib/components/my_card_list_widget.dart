@@ -27,6 +27,7 @@ class MyCardData {
   final String authorId;
   final String authorName;
   final int timeStamp;
+  final String requestId;
 
   const MyCardData({
     required this.imageUrl,
@@ -37,5 +38,6 @@ class MyCardData {
     required this.authorId,
     required this.authorName,
     required this.timeStamp,
+    required this.requestId,
   });
 }

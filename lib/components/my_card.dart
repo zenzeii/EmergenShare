@@ -1,5 +1,6 @@
 import 'package:emergenshare/components/my_card_list_widget.dart';
 import 'package:emergenshare/screens/main_screens/messages/search_users_screen.dart';
+import 'package:emergenshare/screens/main_screens/requests/update_request_screen.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -285,7 +286,20 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
                     width: MediaQuery.of(context).size.width / 2 -
                         MediaQuery.of(context).size.width / 8,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UpdateRequestScreen(
+                              title: widget.data.title,
+                              location: widget.data.location,
+                              description: widget.data.description,
+                              items: widget.data.items,
+                              requestId: widget.data.requestId,
+                            ),
+                          ),
+                        );
+                      },
                       child: Text('Edit request'),
                     ),
                   )
