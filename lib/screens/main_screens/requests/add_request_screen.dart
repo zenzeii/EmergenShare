@@ -93,11 +93,15 @@ class _Submissionstate extends State<AddRequestScreen> {
                       maxLines: 1,
                       decoration: const InputDecoration(hintText: "Title"),
                       validator: (val) {
-                        return val!.isEmpty ? 'Please enter a title' : null;
+                        return val!.isEmpty
+                            ? 'Please enter a title'
+                            : val.length > 55
+                                ? 'Title is too long'
+                                : null;
                       },
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 10),
                   Form(
                     key: formKeyLocation,
                     child: TextFormField(
@@ -110,14 +114,14 @@ class _Submissionstate extends State<AddRequestScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 10),
                   TextFormField(
                     controller: _requestDesc,
                     textCapitalization: TextCapitalization.sentences,
                     maxLines: 3,
                     decoration: const InputDecoration(hintText: "Description"),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 10),
                   //DropdownButtonCategory(),
                   //SizedBox(height: 10),
                   TextField(
@@ -126,7 +130,7 @@ class _Submissionstate extends State<AddRequestScreen> {
                     focusNode: myFocusNode,
                     maxLines: 1,
                     decoration: InputDecoration(
-                      hintText: "Needed items",
+                      hintText: "Add needed items",
                       suffixIcon: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         mainAxisSize: MainAxisSize.min,
@@ -219,7 +223,7 @@ class _Submissionstate extends State<AddRequestScreen> {
       final Map<String, dynamic> userSubmissionMap = {
         "authorId": FirebaseAuth.instance.currentUser!.uid.toString(),
         "authorName": FirebaseAuth.instance.currentUser!.displayName.toString(),
-        "timeStamp": DateTime.now(),
+        "timeStamp": DateTime.now().millisecondsSinceEpoch,
         "requestTitle": _requestTitle.text.trim(),
         "requestLocation": _requestLocation.text.trim(),
         "requestDescription": _requestDesc.text.trim(),

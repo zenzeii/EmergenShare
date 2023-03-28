@@ -106,34 +106,20 @@ class _RequestListScreenState extends State<RequestListScreen> {
             return ListView.builder(
               itemCount: data.size,
               itemBuilder: (context, index) {
-                return InkWell(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).clearSnackBars();
-                      /*
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CoursePageScreen2(
-                          data.docs[index],
-                        ),
-                      ),
-                    );
-
-                     */
-                    },
-                    child: MyCard(
-                      data: MyCardData(
-                        imageUrl:
-                            'https://images.pexels.com/photos/5690826/pexels-photo-5690826.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-                        title: (data.docs[index].data())["requestTitle"],
-                        location: (data.docs[index].data())["requestLocation"],
-                        description:
-                            (data.docs[index].data())["requestDescription"],
-                        items: (data.docs[index].data())["requestItems"],
-                        authorId: (data.docs[index].data())["authorId"],
-                        authorName: (data.docs[index].data())["authorName"],
-                      ),
-                    ));
+                return MyCard(
+                  data: MyCardData(
+                    imageUrl:
+                        'https://images.pexels.com/photos/5690826/pexels-photo-5690826.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
+                    title: (data.docs[index].data())["requestTitle"],
+                    location: (data.docs[index].data())["requestLocation"],
+                    description:
+                        (data.docs[index].data())["requestDescription"],
+                    items: (data.docs[index].data())["requestItems"],
+                    authorId: (data.docs[index].data())["authorId"],
+                    authorName: (data.docs[index].data())["authorName"],
+                    timeStamp: (data.docs[index].data())["timeStamp"],
+                  ),
+                );
               },
             );
           },

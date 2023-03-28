@@ -1,6 +1,10 @@
 import 'package:emergenshare/components/my_card_list_widget.dart';
 import 'package:emergenshare/screens/main_screens/messages/search_users_screen.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyCard extends StatefulWidget {
   final MyCardData data;
@@ -68,6 +72,8 @@ class _MyCardState extends State<MyCard> {
                   children: [
                     Text(
                       widget.data.title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16.0,
@@ -146,10 +152,10 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
                         children: [
                           Icon(
                             Icons.location_pin,
-                            size: 14,
+                            size: 16,
                           ),
                           Text(
-                            widget.data.location,
+                            ' ' + widget.data.location,
                             style: TextStyle(
                               fontSize: 16.0,
                             ),
@@ -157,28 +163,113 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
                         ],
                       ),
                       SizedBox(height: 20.0),
-                      Text(
+                      ExpandableText(
                         widget.data.description,
                         style: TextStyle(
                           color: Theme.of(context).textTheme.bodyText1!.color,
                           fontSize: 16.0,
                           height: 1.5,
                         ),
+                        maxLines: 3,
+                        expandText: 'show more',
+                        collapseText: 'show less',
                       ),
                       SizedBox(height: 20.0),
-                      Text('We need:'),
-                      Wrap(children: [
-                        ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: widget.data.items.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                padding: EdgeInsets.all(8),
-                                child: Text(widget.data.items[index]),
-                              );
-                            }),
-                      ]),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'We need:',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Wrap(children: [
+                              ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: widget.data.items.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      padding: EdgeInsets.all(8),
+                                      child: Row(
+                                        children: [
+                                          Text('- ' + widget.data.items[index]),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                            ]),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 30.0),
+                      Text(
+                        'Posted by',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Theme.of(context).dividerColor,
+                              radius: 25.0,
+                            ),
+                            SizedBox(
+                              width: 18,
+                            ),
+                            Flexible(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        widget.data.authorName,
+                                        style: const TextStyle(fontSize: 18),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        DateFormat('dd.MM.yyyy, HH:mm')
+                                            .format(
+                                              DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                widget.data.timeStamp,
+                                              ),
+                                            )
+                                            .toString(),
+                                        style: const TextStyle(
+                                            fontSize: 14, color: Colors.grey),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 20.0),
                     ],
                   ),
@@ -188,36 +279,46 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
           ),
           Container(
             padding: const EdgeInsets.all(5.0),
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 8,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Call'),
+            child: widget.data.authorId ==
+                    FirebaseAuth.instance.currentUser!.uid.toString()
+                ? Container(
+                    width: MediaQuery.of(context).size.width / 2 -
+                        MediaQuery.of(context).size.width / 8,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Edit request'),
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            MediaQuery.of(context).size.width / 8,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Call'),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            MediaQuery.of(context).size.width / 8,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            SearchUsersScreen()
+                                .createChatRoomAndStartConversation(
+                                    widget.data.authorId,
+                                    widget.data.authorName,
+                                    context);
+                          },
+                          child: Text('Message'),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 8,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      SearchUsersScreen().createChatRoomAndStartConversation(
-                          widget.data.authorId,
-                          widget.data.authorName,
-                          context);
-                    },
-                    child: Text('Message'),
-                  ),
-                ),
-              ],
-            ),
           )
         ],
       ),
