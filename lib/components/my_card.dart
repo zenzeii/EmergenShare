@@ -296,6 +296,7 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
                               description: widget.data.description,
                               items: widget.data.items,
                               requestId: widget.data.requestId,
+                              imageUrl: widget.data.imageUrl,
                             ),
                           ),
                         );

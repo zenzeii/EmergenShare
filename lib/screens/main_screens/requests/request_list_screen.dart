@@ -90,7 +90,7 @@ class _RequestListScreenState extends State<RequestListScreen> {
               return const Center(
                 child: Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: Text("What help do you need?"),
+                  child: Text("No requests at the moment"),
                 ),
               );
             }
@@ -108,8 +108,9 @@ class _RequestListScreenState extends State<RequestListScreen> {
               itemBuilder: (context, index) {
                 return MyCard(
                   data: MyCardData(
-                      imageUrl:
-                          'https://images.pexels.com/photos/5690826/pexels-photo-5690826.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
+                      imageUrl: (data.docs[index].data())["requestImage"] != ''
+                          ? (data.docs[index].data())["requestImage"]
+                          : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',
                       title: (data.docs[index].data())["requestTitle"],
                       location: (data.docs[index].data())["requestLocation"],
                       description:
