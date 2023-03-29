@@ -2,6 +2,10 @@ import 'package:emergenshare/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AddInventoryItemScreen extends StatefulWidget {
   @override
@@ -12,12 +16,10 @@ String dropdownValue = 'Select category';
 
 class _Submissionstate extends State<AddInventoryItemScreen> {
   final formKeyTitle = GlobalKey<FormState>();
-  final formKeyAmount = GlobalKey<FormState>();
   final TextEditingController _itemName = new TextEditingController();
-  final TextEditingController _itemAmount = new TextEditingController();
 
-  double ratingLevel = 0;
-  double difficultyLevel = 0;
+  String imageUrl = '';
+  String imageName = '';
 
   @override
   void initState() {
@@ -48,7 +50,55 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
         body: ListView(
           padding: const EdgeInsets.all(40),
           children: [
-            SizedBox(height: 20.0),
+            InkWell(
+              onTap: () async {
+                ImagePicker imagePicker = ImagePicker();
+                XFile? file =
+                    await imagePicker.pickImage(source: ImageSource.camera);
+                if (file == null) return;
+                String uniqueFileName =
+                    DateTime.now().millisecondsSinceEpoch.toString();
+                Reference referenceRoot = FirebaseStorage.instance.ref();
+                Reference referenceDirImages = referenceRoot.child('images');
+                Reference referenceImageToUpload =
+                    referenceDirImages.child(uniqueFileName);
+                setState(() {});
+                try {
+                  await referenceImageToUpload.putFile(File(file!.path));
+                  setState(() async {
+                    imageUrl = await referenceImageToUpload.getDownloadURL();
+                    imageName = uniqueFileName;
+                  });
+                } catch (error) {}
+                setState(() {});
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.width - 80,
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                      opacity: 0.25,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.photo_outlined,
+                      color: Colors.grey,
+                      size: 40,
+                    ),
+                    Text(
+                      'Select Image',
+                      style: TextStyle(color: Colors.black.withOpacity(0.5)),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10.0),
             Form(
               key: formKeyTitle,
               child: TextFormField(
@@ -61,22 +111,9 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
                 },
               ),
             ),
-            SizedBox(height: 10),
-            Form(
-              key: formKeyAmount,
-              child: TextFormField(
-                controller: _itemAmount,
-                keyboardType: TextInputType.number,
-                maxLines: 1,
-                decoration: const InputDecoration(hintText: "Item amount"),
-              ),
-            ),
-            SizedBox(height: 10),
-            DropdownButtonCategory(),
-            SizedBox(height: 10),
+            SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 setState(() {
                   submitFunction();
                 });
@@ -90,62 +127,19 @@ class _Submissionstate extends State<AddInventoryItemScreen> {
   }
 
   void submitFunction() {
-    if (formKeyTitle.currentState!.validate() &&
-        dropdownValue != 'Select category') {
+    if (formKeyTitle.currentState!.validate()) {
       final Map<String, dynamic> userSubmissionMap = {
         "authorId": FirebaseAuth.instance.currentUser!.uid.toString(),
         "authorName": FirebaseAuth.instance.currentUser!.displayName.toString(),
-        "timeStamp": DateTime.now(),
+        "timeStamp": DateTime.now().millisecondsSinceEpoch,
         "itemName": _itemName.text.trim(),
-        "itemAmount": _itemAmount.text.trim(),
-        "category": dropdownValue,
+        "itemImageUrl": imageUrl,
+        "itemImageName": imageName,
       };
       DatabaseMethods().addInventoryItem(
         userSubmissionMap,
       );
       Navigator.pop(context);
-    } else if (dropdownValue == 'Select category') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Select category!'),
-        ),
-      );
     }
   }
 }
-
-class DropdownButtonCategory extends StatefulWidget {
-  const DropdownButtonCategory({super.key});
-
-  @override
-  State<DropdownButtonCategory> createState() => _DropdownButtonCategoryState();
-}
-
-class _DropdownButtonCategoryState extends State<DropdownButtonCategory> {
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      isExpanded: true,
-      value: dropdownValue,
-      onChanged: (String? value) {
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
-}
-
-const List<String> list = <String>[
-  'Select category',
-  'Food',
-  'Time',
-  'Material',
-  'Money',
-];
