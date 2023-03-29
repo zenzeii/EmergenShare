@@ -1,11 +1,15 @@
+import 'package:card_loading/card_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emergenshare/screens/main_screens/inventory/add_inventory_item_screen.dart';
+import 'package:emergenshare/screens/main_screens/inventory/update_inventory_item_screen.dart';
+import 'package:emergenshare/services/helperfunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 final inventoryRef = FirebaseFirestore.instance
     .collection('users')
-    .doc(FirebaseAuth.instance.currentUser!.uid.toString())
+    .doc(HelperFunctions.getUserIdSharedPreference())
     .collection('inventory');
 
 class InventoryListScreen extends StatefulWidget {
@@ -104,29 +108,37 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
                   .add((data.docs[i].data())["itemName"]);
             }
 
-            return ListView.builder(
+            return GridView.builder(
+              padding: EdgeInsets.all(8.0),
               itemCount: data.size,
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    ScaffoldMessenger.of(context).clearSnackBars();
-                    /*
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CoursePageScreen2(
-                          data.docs[index],
-                        ),
-                      ),
+                          builder: (context) => UpdateInventoryItemScreen(
+                                itemName: (data.docs[index].data())["itemName"],
+                                itemImageUrl:
+                                    (data.docs[index].data())["itemImageUrl"],
+                                itemImageName:
+                                    (data.docs[index].data())["itemImageName"],
+                                inventoryId: data.docs[index].id,
+                              )),
                     );
-
-                     */
                   },
                   child: CourseBox().courseBox(
-                      MediaQuery.of(context).size.width,
-                      (data.docs[index].data())["itemName"]),
+                    MediaQuery.of(context).size.width,
+                    (data.docs[index].data())["itemName"],
+                    (data.docs[index].data())["itemImageUrl"],
+                  ),
                 );
               },
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 0.0,
+                mainAxisSpacing: 0.0,
+              ),
             );
           },
         ),
@@ -136,27 +148,82 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
 }
 
 class CourseBox {
-  Widget courseBox(double width, String name) {
+  Widget courseBox(double width, String name, String imageUrl) {
     return Container(
       width: width,
       margin: const EdgeInsets.all(8.0),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover,
+              opacity: 0.8,
+            ),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.blue, Colors.blue],
+              colors: [Colors.blue, Colors.blueAccent],
               tileMode: TileMode.mirror,
             ),
           ),
           padding: const EdgeInsets.all(18.0),
-          child: Text(
-            name,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class InventoryTile {
+  Widget inventoryTile(double width, String name, String imageUrl) {
+    return Container(
+      width: width,
+      margin: const EdgeInsets.all(8.0),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          placeholder: (context, url) => CardLoading(
+            height: double.infinity,
+          ),
+          errorWidget: (context, url, error) => new Icon(Icons.error),
+          imageBuilder: (context, imageProvider) => Container(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+                opacity: 0.8,
+              ),
             ),
           ),
         ),
