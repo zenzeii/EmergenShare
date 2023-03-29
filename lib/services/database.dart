@@ -25,7 +25,21 @@ class DatabaseMethods {
   }
 
   void uploadUserInfo(String uid, Map<String, dynamic> userMap) {
+    final Map<String, dynamic> exampleItemMap = {
+      "authorId": FirebaseAuth.instance.currentUser!.uid.toString(),
+      "authorName": FirebaseAuth.instance.currentUser!.displayName.toString(),
+      "timeStamp": DateTime.now().millisecondsSinceEpoch,
+      "itemName": 'Example item',
+      "itemImageUrl":
+          'https://d1nhio0ox7pgb.cloudfront.net/_img/i_collection_png/512x512/plain/objects.png',
+      "itemImageName": '',
+    };
     FirebaseFirestore.instance.collection("users").doc(uid).set(userMap);
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .collection("inventory")
+        .add(exampleItemMap);
   }
 
   void updateUserInfo(String uid, Map<String, dynamic> userMap) {

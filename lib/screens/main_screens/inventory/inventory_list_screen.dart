@@ -2,14 +2,13 @@ import 'package:card_loading/card_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emergenshare/screens/main_screens/inventory/add_inventory_item_screen.dart';
 import 'package:emergenshare/screens/main_screens/inventory/update_inventory_item_screen.dart';
-import 'package:emergenshare/services/helperfunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-final inventoryRef = FirebaseFirestore.instance
+CollectionReference inventoryRef = FirebaseFirestore.instance
     .collection('users')
-    .doc(HelperFunctions.getUserIdSharedPreference())
+    .doc(FirebaseAuth.instance.currentUser!.uid)
     .collection('inventory');
 
 class InventoryListScreen extends StatefulWidget {
@@ -22,6 +21,14 @@ class InventoryListScreen extends StatefulWidget {
 
 class _InventoryListScreenState extends State<InventoryListScreen> {
   late int captureNumberOfCourses;
+
+  void initState() {
+    super.initState();
+    inventoryRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('inventory');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,36 +88,37 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
           ],
         )),
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: inventoryRef.snapshots(),
+          stream: inventoryRef.snapshots()
+              as Stream<QuerySnapshot<Map<String, dynamic>>>,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return const Center(
+              return Center(
                 child: Text("Something went wrong :("),
               );
             }
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             }
             if (snapshot.requireData.size == 0) {
-              return const Center(
+              return Center(
                 child: Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: Text("What do want to donate?"),
+                  child: Text(
+                      'What do want to donate ${FirebaseAuth.instance.currentUser!.displayName}?'),
                 ),
               );
             }
 
-            final data = snapshot.requireData;
-            captureNumberOfCourses = data.size;
+            captureNumberOfCourses = snapshot.requireData.size;
             for (var i = 0; i < captureNumberOfCourses; i++) {
               InventoryListScreen()
                   .courseNames
-                  .add((data.docs[i].data())["itemName"]);
+                  .add((snapshot.requireData.docs[i].data())["itemName"]);
             }
 
             return GridView.builder(
               padding: EdgeInsets.all(8.0),
-              itemCount: data.size,
+              itemCount: snapshot.requireData.size,
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
@@ -118,19 +126,21 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => UpdateInventoryItemScreen(
-                                itemName: (data.docs[index].data())["itemName"],
-                                itemImageUrl:
-                                    (data.docs[index].data())["itemImageUrl"],
-                                itemImageName:
-                                    (data.docs[index].data())["itemImageName"],
-                                inventoryId: data.docs[index].id,
+                                itemName: (snapshot.requireData.docs[index]
+                                    .data())["itemName"],
+                                itemImageUrl: (snapshot.requireData.docs[index]
+                                    .data())["itemImageUrl"],
+                                itemImageName: (snapshot.requireData.docs[index]
+                                    .data())["itemImageName"],
+                                inventoryId:
+                                    snapshot.requireData.docs[index].id,
                               )),
                     );
                   },
                   child: CourseBox().courseBox(
                     MediaQuery.of(context).size.width,
-                    (data.docs[index].data())["itemName"],
-                    (data.docs[index].data())["itemImageUrl"],
+                    (snapshot.requireData.docs[index].data())["itemName"],
+                    (snapshot.requireData.docs[index].data())["itemImageUrl"],
                   ),
                 );
               },
