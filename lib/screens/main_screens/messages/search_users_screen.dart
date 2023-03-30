@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emergenshare/components/colors.dart';
 import 'package:emergenshare/screens/main_screens/messages/conversation_screen.dart';
 import 'package:emergenshare/services/database.dart';
-import 'package:emergenshare/services/helperfunctions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +15,10 @@ class SearchUsersScreen extends StatefulWidget {
   void createChatRoomAndStartConversation(
       String userId, String userName, BuildContext context) {
     final String chatId =
-        getChatRoomId(userId, HelperFunctions.getUserIdSharedPreference());
+        getChatRoomId(userId, FirebaseAuth.instance.currentUser!.uid);
     final List<String> userids = [
       userId,
-      HelperFunctions.getUserIdSharedPreference()
+      FirebaseAuth.instance.currentUser!.uid
     ];
     final List<String> usernames = [
       userName,

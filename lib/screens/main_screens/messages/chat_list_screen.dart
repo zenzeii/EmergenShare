@@ -10,7 +10,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 final myChatsRef = FirebaseFirestore.instance.collection('chats');
 
-/// Holds all example app films
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({Key? key}) : super(key: key);
 

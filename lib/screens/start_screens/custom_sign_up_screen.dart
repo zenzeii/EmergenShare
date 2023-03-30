@@ -1,6 +1,5 @@
 import 'package:emergenshare/screens/start_screens/sub_screens/put_user_info_screen.dart';
 import 'package:emergenshare/services/database.dart';
-import 'package:emergenshare/services/helperfunctions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -219,7 +218,7 @@ class CustomEmailSignUpForm extends StatelessWidget {
         DatabaseMethods()
             .uploadUserInfo(result.user!.uid.toString(), userInfoMap);
         controller.setEmailAndPassword(emailCtrl.text, passwordCtrl.text);
-        HelperFunctions.updateUserNameSharedPreference(usernameCtrl.text);
+        FirebaseAuth.instance.currentUser!.updateDisplayName(usernameCtrl.text);
         Navigator.pop(context);
         Navigator.push(
           context,

@@ -1,9 +1,9 @@
 import 'package:emergenshare/components/chat_appbar.dart';
 import 'package:emergenshare/components/colors.dart';
 import 'package:emergenshare/services/database.dart';
-import 'package:emergenshare/services/helperfunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
@@ -37,7 +37,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           (snapshot.data?.docs[index].data() as Map)["message"],
                           (snapshot.data?.docs[index].data()
                                   as Map)["sendBy"] ==
-                              HelperFunctions.getUserIdSharedPreference());
+                              FirebaseAuth.instance.currentUser!.uid);
                     })
                 : Container();
           },
@@ -50,7 +50,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     if (messageController.text.isNotEmpty) {
       final Map<String, dynamic> messageMap = {
         "message": messageController.text.trim(),
-        "sendBy": HelperFunctions.getUserIdSharedPreference(),
+        "sendBy": FirebaseAuth.instance.currentUser!.uid,
         "time": DateTime.now().millisecondsSinceEpoch
       };
       databaseMethods.addMessage(widget.chatRoomId, messageMap);
