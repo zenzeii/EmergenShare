@@ -1,11 +1,13 @@
-import 'package:emergenshare/screens/explore_screen.dart';
+import 'package:emergenshare/screens/main_screens/inventory/inventory_list_screen.dart';
+import 'package:emergenshare/screens/main_screens/messages/chat_list_screen.dart';
+import 'package:emergenshare/screens/main_screens/requests/request_list_screen.dart';
+import 'package:emergenshare/screens/start_screens/custom_start_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'services/firebase_options.dart';
 
-import 'firebase_options.dart';
-import 'screens/news_list_screen.dart';
-
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -20,33 +22,46 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'EmergenShare',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyStatefulWidget(),
+      home: checkUser(),
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({super.key});
-
+class checkUser extends StatelessWidget {
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  Widget build(BuildContext context) => StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (FirebaseAuth.instance.currentUser == null) {
+              return StartScreen();
+            }
+            return Tabs();
+          } else {
+            return StartScreen();
+          }
+        },
+      );
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class Tabs extends StatefulWidget {
+  const Tabs({super.key});
+
+  @override
+  State<Tabs> createState() => _TabsState();
+}
+
+class _TabsState extends State<Tabs> {
   int _selectedIndex = 0;
   List screen = [
-    NewsListScreen(),
-    ExploreScreen(),
-    NewsListScreen(),
-    ExploreScreen(),
-    /*
-    NewRequestScreen(),
-    ProfileScree(),
-    */
+    //NewsListScreen(),
+    RequestListScreen(),
+    InventoryListScreen(),
+    ChatListScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -58,33 +73,37 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('EmergenShare'),
-      ),
       body: screen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          /*
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.explore),
             label: 'Explore',
           ),
+
+           */
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'New Request',
+            //icon: Icon(Icons.live_help_rounded),
+            //icon: Icon(Icons.language_outlined),
+            icon: Icon(Icons.support_rounded),
+            label: 'Requests',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),
-            label: 'My Inventory',
+            label: 'Give',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Chats',
+            label: 'Chat',
           ),
         ],
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         selectedFontSize: 12,
-        selectedItemColor: Colors.amber[800],
-        unselectedItemColor: Colors.black54,
+        showUnselectedLabels: true,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black26,
         onTap: _onItemTapped,
       ),
     );
