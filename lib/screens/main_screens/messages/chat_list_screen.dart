@@ -1,8 +1,12 @@
 import 'dart:math';
-
+import 'package:emergenshare/screens/start_screens/custom_start_screen.dart';
+import 'package:emergenshare/services/delete_user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:emergenshare/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emergenshare/screens/main_screens/messages/conversation_screen.dart';
 import 'package:emergenshare/screens/main_screens/messages/search_users_screen.dart';
+import 'package:emergenshare/screens/start_screens/sub_screens/put_user_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -59,6 +63,21 @@ class _ChatListScreenState extends State<ChatListScreen> {
               switch (choice) {
                 case 'signout':
                   await FirebaseAuth.instance.signOut();
+                  break;
+                case 'change profile picture':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PutUserInfoWidget()),
+                  );
+                  break;
+                case 'delete user':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DeleteAccountScreen(),
+                    ),
+                  );
               }
             },
             icon: const Icon(Icons.more_vert_rounded),
@@ -67,6 +86,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 PopupMenuItem(
                   child: Text('Sign out'),
                   value: 'signout',
+                ),
+                PopupMenuItem(
+                  child: Text('Change profile picture'),
+                  value: 'change profile picture',
+                ),
+                PopupMenuItem(
+                  child: Text('Delete User'),
+                  value: 'delete user',
                 ),
               ];
             },
@@ -124,7 +151,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'lib/components/assets/images/illustration/chats.png',
+                        'lib/components/assets/illustration/chats.png',
                         width: MediaQuery.of(context).size.width / 3,
                         height: MediaQuery.of(context).size.height / 3,
                       ),
@@ -211,6 +238,136 @@ class _ChatListScreenState extends State<ChatListScreen> {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class DeleteAccountScreen extends StatefulWidget {
+  @override
+  _DeleteAccountScreenState createState() => _DeleteAccountScreenState();
+}
+
+//TODO if wrong password then alert user
+class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
+  final _password = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final formKey = GlobalKey<FormState>();
+  bool isPasswordCorrect = true;
+
+  Future<void> checkPassword() async {
+    if (formKey.currentState!.validate()) {
+      AuthMethods()
+          .signInWithEmailAndPassword(
+              FirebaseAuth.instance.currentUser!.email ?? "", _password.text)
+          .then((val) {
+        if (val == "wrong-password") {
+          setState(() {
+            isPasswordCorrect = false;
+          });
+          formKey.currentState!.validate();
+          setState(() {
+            isPasswordCorrect = true;
+          });
+        } else {
+          setState(() {
+            isPasswordCorrect = true;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text("Delete Account"),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(bottom: 20),
+            child: Center(
+                child: Text(
+                    "Please type password to confirm to delete your account")),
+          ),
+          roundedBox(passwordInput()),
+          deleteButton(),
+          const Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Center(
+                child: Text(
+                    "Note: If you enter the wrong password you will be log out and your Account is NOT deleted")),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget passwordInput() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Form(
+        key: formKey,
+        child: TextFormField(
+          validator: (val) {
+            return val!.isNotEmpty ? null : "Can not be empty";
+          },
+          obscureText: true,
+          controller: _password,
+          decoration: const InputDecoration(
+              hintText: "Password",
+              border: InputBorder.none,
+              fillColor: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  Widget deleteButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        await AuthMethods()
+            .signInWithEmailAndPassword(
+                FirebaseAuth.instance.currentUser!.email ?? "", _password.text)
+            .then((val) async {
+          if (val == "wrong-password") {
+            setState(() {
+              isPasswordCorrect = false;
+            });
+          } else {
+            setState(() {
+              isPasswordCorrect = true;
+            });
+          }
+        });
+        if (formKey.currentState!.validate()) {
+          await AuthService().deleteUser(
+              FirebaseAuth.instance.currentUser!.email ?? "", _password.text);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => StartScreen()),
+            (route) => false,
+          );
+        }
+      },
+      child: Text("DELTE USER"),
+    );
+  }
+
+  Widget roundedBox(Widget widget) {
+    return Card(
+      shadowColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: widget,
       ),
     );
   }

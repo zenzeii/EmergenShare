@@ -203,7 +203,18 @@ class _MyCardDetailsScreenState extends State<MyCardDetailsScreen> {
                                       padding: EdgeInsets.all(8),
                                       child: Row(
                                         children: [
-                                          Text('- ' + widget.data.items[index]),
+                                          Flexible(
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('• '),
+                                                Flexible(
+                                                    child: Text(widget
+                                                        .data.items[index])),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
                                     );

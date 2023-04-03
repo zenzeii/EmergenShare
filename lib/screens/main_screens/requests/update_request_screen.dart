@@ -114,7 +114,7 @@ class _Submissionstate extends State<UpdateRequestScreen> {
                     onTap: () async {
                       ImagePicker imagePicker = ImagePicker();
                       XFile? file = await imagePicker.pickImage(
-                          source: ImageSource.camera);
+                          source: ImageSource.gallery);
                       if (file == null) return;
                       String uniqueFileName =
                           DateTime.now().millisecondsSinceEpoch.toString();

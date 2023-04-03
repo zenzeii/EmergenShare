@@ -220,10 +220,13 @@ class CustomEmailSignUpForm extends StatelessWidget {
         controller.setEmailAndPassword(emailCtrl.text, passwordCtrl.text);
         FirebaseAuth.instance.currentUser!.updateDisplayName(usernameCtrl.text);
         Navigator.pop(context);
+        /*
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const PutUserInfoWidget()),
+          MaterialPageRoute(builder: (context) => PutUserInfoWidget()),
         );
+
+         */
       } on FirebaseAuthException catch (e) {
         if (e.code == "FirebaseAuthException" ||
             e.code == "email-already-in-use") {

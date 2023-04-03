@@ -1,29 +1,23 @@
+import 'dart:io';
 import 'package:emergenshare/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
+import 'package:image_picker/image_picker.dart';
 
-class PutUserInfoWidget extends StatelessWidget {
-  const PutUserInfoWidget({Key? key}) : super(key: key);
-
+class PutUserInfoWidget extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: PutUserInfoWidgetForm(),
-    );
-  }
+  _PutUserInfoWidgetForm createState() => _PutUserInfoWidgetForm();
 }
 
-class PutUserInfoWidgetForm extends StatelessWidget {
-  PutUserInfoWidgetForm({Key? key}) : super(key: key);
-
+class _PutUserInfoWidgetForm extends State<PutUserInfoWidget> {
   bool isLoading = false;
   bool isEmailInvalid = false;
   bool isEmailTaken = false;
   bool isNameTaken = false;
   final formKey = GlobalKey<FormState>();
-  String profilePicLink = "";
+  String newImageUrl = "";
 
   final nameCtrl = TextEditingController();
   final majorCtrl = TextEditingController();
@@ -49,15 +43,40 @@ class PutUserInfoWidgetForm extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    ImagePicker imagePicker = ImagePicker();
+                    XFile? file = await imagePicker.pickImage(
+                        source: ImageSource.gallery);
+                    if (file == null) return;
+                    String uniqueFileName =
+                        DateTime.now().millisecondsSinceEpoch.toString();
+                    Reference referenceRoot = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages =
+                        referenceRoot.child('images/profile');
+                    Reference referenceImageToUpload =
+                        referenceDirImages.child(uniqueFileName);
+                    setState(() {});
+                    try {
+                      await referenceImageToUpload.putFile(File(file!.path));
+                      newImageUrl =
+                          await referenceImageToUpload.getDownloadURL();
+                    } catch (error) {}
+                    setState(() {});
+                  },
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                    child: GFAvatar(
-                      shape: GFAvatarShape.square,
-                      radius: ((MediaQuery.of(context).size.width) / 2) - 40,
-                      backgroundColor: Colors.black12,
-                      backgroundImage: const NetworkImage(
-                          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"),
+                    child: Container(
+                      height: MediaQuery.of(context).size.width - 80,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          image: DecorationImage(
+                            image: NetworkImage(newImageUrl != ''
+                                ? newImageUrl
+                                : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'),
+                            fit: BoxFit.cover,
+                            opacity: 0.25,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                   ),
                 ),
@@ -71,28 +90,9 @@ class PutUserInfoWidgetForm extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  controller: majorCtrl,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                      hintText: 'Studiengang  (z.B. Informatik B.Sc.)'),
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: studySinceCtrl,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    hintText: 'Studienbeginn (z.B. WS 2022)',
-                  ),
-                ),
-                SizedBox(height: 20),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 0.0, color: Colors.transparent),
-                  ),
+                ElevatedButton(
                   onPressed: () async {
-                    updateProfileFunction(
-                        nameCtrl, majorCtrl, studySinceCtrl, formKey, context);
+                    updateProfileFunction(nameCtrl, context);
                   },
                   child: isLoading
                       ? Transform.scale(
@@ -102,21 +102,17 @@ class PutUserInfoWidgetForm extends StatelessWidget {
                           scale: 0.5,
                         )
                       : const Text(
-                          'Speichern',
+                          'Save',
                           style: TextStyle(color: Colors.white),
                         ),
                 ),
                 SizedBox(height: 10),
                 OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 1.0, color: Colors.transparent),
-                    backgroundColor: Colors.transparent,
-                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: const Text(
-                    'Überspringen',
+                    'Skip',
                   ),
                 ),
               ],
@@ -128,21 +124,13 @@ class PutUserInfoWidgetForm extends StatelessWidget {
   }
 
   updateProfileFunction(
-      TextEditingController nameCtrl,
-      TextEditingController majorCtrl,
-      TextEditingController studySinceCtrl,
-      GlobalKey<FormState> formKey,
-      BuildContext context) async {
+      TextEditingController nameCtrl, BuildContext context) async {
     final Map<String, dynamic> userInfoMap = {
       "bio": nameCtrl.text,
-      "major": majorCtrl.text,
-      "studySince": studySinceCtrl.text,
     };
 
-    if (formKey.currentState!.validate()) {
-      DatabaseMethods().updateUserInfo(
-          FirebaseAuth.instance.currentUser!.uid.toString(), userInfoMap);
-      Navigator.pop(context);
-    }
+    DatabaseMethods().updateUserInfo(
+        FirebaseAuth.instance.currentUser!.uid.toString(), userInfoMap);
+    Navigator.pop(context);
   }
 }

@@ -75,7 +75,7 @@ class _Submissionstate extends State<UpdateInventoryItemScreen> {
                     onTap: () async {
                       ImagePicker imagePicker = ImagePicker();
                       XFile? file = await imagePicker.pickImage(
-                          source: ImageSource.camera);
+                          source: ImageSource.gallery);
                       if (file == null) return;
                       String uniqueFileName =
                           DateTime.now().millisecondsSinceEpoch.toString();
@@ -154,7 +154,7 @@ class _Submissionstate extends State<UpdateInventoryItemScreen> {
                           deleteFunction();
                         });
                       },
-                      child: Text('Delete request'),
+                      child: Text('Delete item'),
                     ),
                   ),
                   SizedBox(
@@ -169,7 +169,7 @@ class _Submissionstate extends State<UpdateInventoryItemScreen> {
                           updateFunction();
                         });
                       },
-                      child: Text('Update request'),
+                      child: Text('Update item'),
                     ),
                   ),
                 ],
